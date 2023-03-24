@@ -2,16 +2,22 @@ body{
     background: dodgerblue;
 }
 
-#display{
+#pads{
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     width: fit-content;
 }
 
-#drum-machine{
+.wrapper, #display{
     display: flex;
     justify-content: center;
-    use-select: none;
+}
+
+#drum-machine{
+    display: flex;
+    flex-flow: column;
+    justify-content: center;
+    user-select: none;
 }
 
 
