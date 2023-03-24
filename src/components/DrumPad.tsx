@@ -13,6 +13,7 @@ interface DrumProps {
     volume?: number;
     playback: number;
     pPitch: boolean;
+    setName: Function;
 }
 
 const DrumPad = ({
@@ -28,6 +29,7 @@ const DrumPad = ({
     volume,
     playback,
     pPitch,
+    setName,
 }: DrumProps) => {
     if(volume && (volume < 0 || volume > 1)) throw Error('volume must be between [0,1] inclusive')
     if(playback && (playback < 0 || playback > 1)) throw Error('playback must be between [0,1] inclusive')
@@ -53,21 +55,28 @@ const DrumPad = ({
 
     const handleClick: MouseEventHandler = async (e) => {
         if (onClick) onClick(e)
-        if (mute !== true) ref.current.play();
+        if (mute !== true){
+                ref.current.play();
+                setName(src);
+        }
     }
 
     const handleOff: MouseEventHandler= async (e) => {
         if (sustain !== true) {
             ref.current.pause()!
             ref.current.currentTime = 0;
+            setName('')
         }
     }
     const handleKeyDown = useCallback(async (e: KeyboardEvent) => {
         if (e.key.toLowerCase() === id.toLowerCase()) {
             if (onKeydown) onKeydown(e)
-            if (mute !== true) ref.current.play();
+            if (mute !== true){
+                ref.current.play();
+                setName(src);
+            }
         }
-    }, [onKeydown, mute, id])
+    }, [onKeydown, mute, id, src, setName])
 
 
     const handleKeyUp = useCallback((e: KeyboardEvent) => {
@@ -77,8 +86,9 @@ const DrumPad = ({
             if (onKeyUp) onKeyUp(e);
             ref.current.pause();
             ref.current.currentTime = 0;
+            setName('')
         }
-    }, [onKeyUp, id, sustain,ref])
+    }, [onKeyUp, id, sustain,ref, setName])
     
     useEffect(()=>{
         ref.current.preservesPitch= pPitch;
